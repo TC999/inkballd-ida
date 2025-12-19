@@ -16,24 +16,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     Helpers::CLogBlock logMain("wWinMain");
     HeapSetInformation(nullptr, HeapEnableTerminationOnCorruption, nullptr, 0);
 
-    // 权限检查
-    {
-        Helpers::CLogBlock logPerm("CanRunInkball");
-        Helpers::CLogBlock logTab("CTabLicense::CanRunInkball");
-        bool canRun = CTabLicense::GetBOOLPermission(L"TabletPCInkBall-EnableGame", false);
-        if (canRun) {
-            int policy = 0;
-            if (TabUtils::TabQueryPolicyValue(L"DisableInkball", 0, &policy, 0, nullptr) >= 0 && policy) {
-                canRun = false;
-            }
-        }
-        if (!canRun) {
-            DispError(nullptr, 15011, 0x3AA8u);
-            WppCleanupUm();
-            return -1;
-        }
-    }
-
     SetProcessDPIAware();
     RegisterApplicationRestart(L" ", 0);
     RegisterApplicationRecoveryCallback(InkBallRecovery, nullptr, 0, 0);
